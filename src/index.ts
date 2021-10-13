@@ -3,27 +3,24 @@
 const Fastify = require("fastify");
 const mercurius = require("mercurius");
 
-const dogs = {
-  1: {
-    breed: "hound",
-    image: "img1",
-    subBreeds: ""
-  },
-  2: {
-    breed: "test",
-    image: "img2",
-    subBreeds: ""
+const dogs = [
+  {
+    hound: {
+      breed: "hound",
+      image: "img1",
+      subBreeds: ""
+    },
+    test: {
+      breed: "test",
+      image: "img2",
+      subBreeds: ""
+    }
   }
-};
+];
 
 const app = Fastify();
 
 const schema = `
-type Query {
-    getDog(breed: String!): Dog
-    allBreeds: [Breed]
-}
-
 type Dog {
     breed: String!
     image: [String]
@@ -34,13 +31,16 @@ type Breed {
     breedType: String
     breedSubType: [String]
 }
+
+type Query {
+    getDog(breed: String!): Dog
+    allBreeds: [Breed]
+}
 `;
 
 const resolvers = {
   Query: {
     getDog: (_, { breed }) => {
-      //   const dog = dogs[breed];
-      //   if (dog)
       return dogs[breed];
     }
   }
