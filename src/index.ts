@@ -1,7 +1,7 @@
 "use strict";
 
-const Fastify = require("fastify");
-const mercurius = require("mercurius");
+import Fastify from "fastify";
+import mercurius from "mercurius";
 
 const dogs = [
   {
@@ -40,15 +40,16 @@ type Query {
 
 const resolvers = {
   Query: {
-    getDog: (_, { breed }) => {
-      return dogs[breed];
+    getDog: ({ breed: String }) => {
+      return "test";
     }
   }
 };
 
 app.register(mercurius, {
   schema,
-  resolvers
+  resolvers,
+  graphiql: true
 });
 
 app.get("/", async function (req, reply) {
