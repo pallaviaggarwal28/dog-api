@@ -8,13 +8,10 @@ class DogAPI extends RESTDataSource {
 
   async getAllBreeds() {
     const response = await this.get("breeds/list/all");
-    // const arr = Object.keys(response.message).map(key => [
-    //   key,
-    //   response.message[key]
-    // ]);
-    // console.log(arr);
-    // return arr.map(breed => this.reducer(breed));
-    console.log(response.message);
+    const arr = Object.keys(response.message).map((key) => {
+      return { key, value: response.message[key] };
+    });
+    return arr.map((breed) => this.breedReducer(breed));
   }
 
   async getImagesByBreed({ breed }) {
@@ -30,7 +27,7 @@ class DogAPI extends RESTDataSource {
   breedReducer(breed) {
     return {
       name: breed.key,
-      area: breed.value
+      area: breed.value,
     };
   }
 }
