@@ -14,6 +14,14 @@ class DogAPI extends RESTDataSource {
     return `/breed/${breed}/list`;
   }
 
+  async getAllBreeds() {
+    const response = await this.get("breeds/list/all");
+    const arr = Object.keys(response.message).map(key => {
+      return { key, value: response.message[key] };
+    });
+    return arr.map(breed => this.breedReducer(breed));
+  }
+
   async getImagesByBreed({ breed }) {
     console.log(breed);
     const response = await this.get(DogAPI.getImagePath({ breed }));
