@@ -4,6 +4,7 @@ module.exports = {
     images: (_, { breed }, { dataSources }) =>
       dataSources.dogAPI.getImagesByBreed(breed),
     subBreed: (_, { breed }, { dataSources }) =>
-      dataSources.dogAPI.getSubBreedsByBreed(breed)
+      dataSources.dogAPI.getSubBreedsByBreed(breed),
+    dog: (_, { breed }, { dataSources }) => dataSources.dogAPI.getDog(breed)
   }
 };
