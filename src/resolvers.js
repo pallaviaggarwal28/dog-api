@@ -1,10 +1,25 @@
-module.exports = {
+const resolvers = {
   Query: {
-    breeds: (_, __, { dataSources }) => dataSources.dogAPI.getAllBreeds(),
-    images: (_, { breed }, { dataSources }) =>
-      dataSources.dogAPI.getImagesByBreed(breed),
-    subBreed: (_, { breed }, { dataSources }) =>
-      dataSources.dogAPI.getSubBreedsByBreed(breed),
-    dog: (_, { breed }, { dataSources }) => dataSources.dogAPI.getDog(breed)
+    breeds: async (_, __, { dataSources }) => dataSources.dogAPI.getAllBreeds(),
+    dog: async (_, { breed }, { dataSources }) => {
+      return dataSources.dogAPI.getDog({ breed });
+    },
+    imagesByBreedAndSubBreed: async (
+      _,
+      { breed, subBreed },
+      { dataSources }
+    ) => {
+      return dataSources.dogAPI.getImagesByBreedAndSubBreed({
+        breed,
+        subBreed
+      });
+    }
+  },
+  Dog: {
+    images: ({ breed }, _, { dataSources }) => {
+      return dataSources.dogAPI.getImagesByBreed({ breed });
+    }
   }
 };
+
+module.exports = resolvers;

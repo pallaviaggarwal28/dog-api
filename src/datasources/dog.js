@@ -6,37 +6,24 @@ class DogAPI extends RESTDataSource {
     this.baseURL = "https://dog.ceo/api/";
   }
 
-  static getImagePath({ breed }) {
-    return `/breed/${breed}/images/random`;
-  }
-
-  static getSubBreedPath({ breed }) {
-    return `/breed/${breed}/list`;
-  }
-
-  async getAllBreeds() {
-    const response = await this.get("breeds/list/all");
-    const arr = Object.keys(response.message).map(key => {
-      return { key, value: response.message[key] };
-    });
-    return arr.map(breed => this.breedReducer(breed));
-  }
-
   async getImagesByBreed({ breed }) {
-    console.log(breed);
-    const response = await this.get(DogAPI.getImagePath({ breed }));
-    return response.message;
+    const response = await this.get(`/breed/${breed}/images`);
+    return { urls: response.message || [] };
+  }
+
+  async getImagesByBreedAndSubBreed({ breed, subBreed }) {
+    const response = await this.get(`/breed/${breed}/${subBreed}/images`);
+    return { message: response.message || [] };
   }
 
   async getSubBreedsByBreed({ breed }) {
-    const response = await this.get(DogAPI.getSubBreedPath({ breed }));
+    const response = await this.get(`/breed/${breed}/list`);
     return response.message;
   }
 
   async getAllBreeds() {
     const response = await this.get("breeds/list/all");
     const data = response.message;
-    console.log(data);
     return Promise.all(
       Object.keys(data).map(async key => {
         return {
@@ -48,10 +35,12 @@ class DogAPI extends RESTDataSource {
   }
 
   async getDog({ breed }) {
+    const images = await this.getImagesByBreed({ breed });
+    const subBreeds = await this.getSubBreedsByBreed({ breed });
     return {
-      breed: breed,
-      images: await this.getImagesByBreed({ breed: breed }),
-      subBreed: await this.getSubBreedsByBreed({ breed: breed })
+      breed,
+      images,
+      subBreeds: subBreeds
     };
   }
 }
